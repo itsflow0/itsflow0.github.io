@@ -38,6 +38,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            margin-bottom: 20px;
         }
         .embed-header {
             display: flex;
@@ -79,26 +80,26 @@
             background-color: #5b6eae;
         }
         .message-box {
-            margin-top: 20px;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            width: 350px;
         }
         .message-box input {
             padding: 10px;
-            width: 80%;
-            margin-bottom: 10px;
+            width: 70%; 
             border-radius: 5px;
             border: 1px solid #23272a;
+            margin-right: 10px; 
         }
         .send-button {
-            padding: 10px 20px;
+            padding: 10px;
             background-color: #7289da;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             text-align: center;
             cursor: pointer;
+            flex-grow: 1;
         }
         .send-button:hover {
             background-color: #5b6eae;
@@ -126,6 +127,7 @@
     </div>
 
     <script>
+        
         async function loadDiscordWidget() {
             const response = await fetch('https://discord.com/api/guilds/1252082137784516710/widget.json');
             const data = await response.json();
@@ -146,6 +148,7 @@
             }
         }
 
+        
         async function sendMessage() {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value;
@@ -155,7 +158,7 @@
                 return;
             }
 
-            // please dont spam the webhook :) 
+            // please dont spam this webhook, the filter blocks bad words :(
             const webhookUrl = 'https://discord.com/api/webhooks/1256635713202421860/s-OqjC4R9ZDR5RQwhwKHeGVJBxhbhks_oVeimUBaWwLpO_3Y_nnwuOa4j2_8agplQVxs';
             
             const payload = JSON.stringify({ content: message });
@@ -181,6 +184,7 @@
             }
         }
 
+        
         loadDiscordWidget();
     </script>
 </body>
