@@ -60,10 +60,6 @@
             border-top: 1px solid #23272a;
             border-bottom: 1px solid #23272a;
         }
-        .role {
-            padding: 5px;
-            font-weight: bold;
-        }
         .member {
             padding: 5px;
             border-bottom: 1px solid #23272a;
@@ -139,34 +135,12 @@
             if (data.members && data.members.length > 0) {
                 membersListElement.innerHTML = '';
 
-                data.members.sort((a, b) => {
-                    const roleA = a.roles && a.roles[0] ? a.roles[0] : '';
-                    const roleB = b.roles && b.roles[0] ? b.roles[0] : '';
-                    return roleA.localeCompare(roleB);
-                });
-
-                const roleGroups = {};
                 data.members.forEach(member => {
-                    const role = member.roles && member.roles[0] ? member.roles[0] : 'No Role';
-                    if (!roleGroups[role]) {
-                        roleGroups[role] = [];
-                    }
-                    roleGroups[role].push(member);
+                    const memberElement = document.createElement('div');
+                    memberElement.className = 'member';
+                    memberElement.innerHTML = `<span style="color:${member.color || 'white'}">${member.username}</span>`;
+                    membersListElement.appendChild(memberElement);
                 });
-
-                for (const role in roleGroups) {
-                    const roleElement = document.createElement('div');
-                    roleElement.className = 'role';
-                    roleElement.textContent = role;
-                    membersListElement.appendChild(roleElement);
-
-                    roleGroups[role].forEach(member => {
-                        const memberElement = document.createElement('div');
-                        memberElement.className = 'member';
-                        memberElement.innerHTML = `<span style="color:${member.color || 'white'}">${member.username}</span><span>${role}</span>`;
-                        membersListElement.appendChild(memberElement);
-                    });
-                }
             } else {
                 membersListElement.textContent = 'No members available.';
             }
