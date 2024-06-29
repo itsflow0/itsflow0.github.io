@@ -28,23 +28,51 @@
             margin: 0;
             font-size: 1.5em;
         }
-        .widget {
+        .embed {
             width: 350px;
-            height: 500px;
             background-color: #2c2f33;
             border: 1px solid #23272a;
             border-radius: 8px;
-            overflow-y: auto;
-            padding: 10px;
+            padding: 20px;
             color: white;
         }
-        .channel {
-            padding: 10px;
+        .embed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .embed-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .embed-header p {
+            margin: 0;
+            font-size: 1em;
+        }
+        .members-list {
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 1px solid #23272a;
             border-bottom: 1px solid #23272a;
+        }
+        .member {
+            padding: 5px;
+            border-bottom: 1px solid #23272a;
+        }
+        .join-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #7289da;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
             cursor: pointer;
         }
-        .channel:hover {
-            background-color: #7289da;
+        .join-button:hover {
+            background-color: #5b6eae;
         }
     </style>
 </head>
@@ -53,28 +81,35 @@
         <h1>Site 09 Roleplay</h1>
         <p>Under construction</p>
     </div>
-    <div class="widget" id="widget">
-        Loading channels...
+    <div class="embed" id="embed">
+        <div class="embed-header">
+            <h2>Server Members</h2>
+            <p id="member-count">Loading...</p>
+        </div>
+        <div class="members-list" id="members-list">
+            Loading members...
+        </div>
+        <a href="https://discord.gg/AEsX6s9mXv" class="join-button">Join Site-09</a>
     </div>
 
     <script>
         async function loadDiscordWidget() {
             const response = await fetch('https://discord.com/api/guilds/1252082137784516710/widget.json');
             const data = await response.json();
-            const widget = document.getElementById('widget');
-            widget.innerHTML = '';
+            const memberCountElement = document.getElementById('member-count');
+            const membersListElement = document.getElementById('members-list');
+            memberCountElement.textContent = `${data.presence_count} Members`;
 
-            if (data.channels && data.channels.length > 0) {
-                data.channels.forEach(channel => {
-                    if (channel.type === 0) { // Type 0 indicates a text channel
-                        const channelElement = document.createElement('div');
-                        channelElement.className = 'channel';
-                        channelElement.textContent = `# ${channel.name}`;
-                        widget.appendChild(channelElement);
-                    }
+            if (data.members && data.members.length > 0) {
+                membersListElement.innerHTML = '';
+                data.members.forEach(member => {
+                    const memberElement = document.createElement('div');
+                    memberElement.className = 'member';
+                    memberElement.textContent = member.username;
+                    membersListElement.appendChild(memberElement);
                 });
             } else {
-                widget.textContent = 'No text channels available.';
+                membersListElement.textContent = 'No members available.';
             }
         }
 
