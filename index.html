@@ -35,6 +35,9 @@
             border-radius: 8px;
             padding: 20px;
             color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .embed-header {
             display: flex;
@@ -61,8 +64,34 @@
             border-bottom: 1px solid #23272a;
         }
         .join-button {
-            display: inline-block;
-            margin-top: 10px;
+            display: block;
+            padding: 10px 20px;
+            background-color: #7289da;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .join-button:hover {
+            background-color: #5b6eae;
+        }
+        .message-box {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .message-box input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #23272a;
+        }
+        .send-button {
             padding: 10px 20px;
             background-color: #7289da;
             color: white;
@@ -71,7 +100,7 @@
             text-align: center;
             cursor: pointer;
         }
-        .join-button:hover {
+        .send-button:hover {
             background-color: #5b6eae;
         }
     </style>
@@ -83,13 +112,17 @@
     </div>
     <div class="embed" id="embed">
         <div class="embed-header">
-            <h2>Server Members</h2>
+            <h2>Online Members</h2>
             <p id="member-count">Loading...</p>
         </div>
         <div class="members-list" id="members-list">
             Loading members...
         </div>
-        <a href="https://discord.gg/AEsX6s9mXv" class="join-button">Join Site-09</a>
+        <a href="https://discord.gg/AEsX6s9mXv" class="join-button">Join Site 09</a>
+    </div>
+    <div class="message-box">
+        <input type="text" id="message-input" placeholder="Send a message in general chat">
+        <button class="send-button" onclick="sendMessage()">Send</button>
     </div>
 
     <script>
@@ -98,7 +131,7 @@
             const data = await response.json();
             const memberCountElement = document.getElementById('member-count');
             const membersListElement = document.getElementById('members-list');
-            memberCountElement.textContent = `${data.presence_count} Members`;
+            memberCountElement.textContent = `${data.presence_count} Online`;
 
             if (data.members && data.members.length > 0) {
                 membersListElement.innerHTML = '';
@@ -110,6 +143,41 @@
                 });
             } else {
                 membersListElement.textContent = 'No members available.';
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+
+            if (message.trim() === '') {
+                alert('Please enter a message.');
+                return;
+            }
+
+            // please dont spam the webhook :) 
+            const webhookUrl = 'https://discord.com/api/webhooks/1256635713202421860/s-OqjC4R9ZDR5RQwhwKHeGVJBxhbhks_oVeimUBaWwLpO_3Y_nnwuOa4j2_8agplQVxs';
+            
+            const payload = JSON.stringify({ content: message });
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: payload,
+                });
+
+                if (response.ok) {
+                    alert('Message sent successfully!');
+                    messageInput.value = '';
+                } else {
+                    alert('Failed to send message.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while sending the message.');
             }
         }
 
